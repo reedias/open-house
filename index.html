@@ -62,6 +62,15 @@ button,.btn{background:var(--purple);color:#fff;border:none;border-radius:10px;p
 .success-message{display:none;background:#10b981;color:#fff;padding:14px 16px;border-radius:10px;margin-bottom:14px;font-weight:700;}
 .success-message.show{display:block;animation:slideDown 0.4s ease;}
 @keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.modal-overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;}
+.modal-overlay.show{display:flex;}
+.modal{background:var(--card);border-radius:18px;padding:28px;max-width:400px;width:90%;box-shadow:0 20px 60px rgba(0,0,0,0.3);}
+.modal h3{color:var(--purple);margin-bottom:16px;font-size:1.3rem;}
+.modal input{margin-bottom:12px;}
+.modal-buttons{display:flex;gap:10px;}
+.modal .btn{flex:1;margin:0;padding:12px;}
+.btn-cancel{background:#ddd;color:#333;font-weight:700;border:none;border-radius:10px;padding:12px;cursor:pointer;}
+.btn-cancel:hover{opacity:0.8;}
 .form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
 @media(max-width:600px){.form-row{grid-template-columns:1fr;}}
 footer{text-align:center;color:var(--muted);font-size:0.85rem;margin-top:30px;}
@@ -121,6 +130,19 @@ footer{text-align:center;color:var(--muted);font-size:0.85rem;margin-top:30px;}
   <div id="gifts"></div>
 </section>
 
+<!-- MODAL PARA CONFIRMAR PRESENTE -->
+<div class="modal-overlay" id="giftModal">
+  <div class="modal">
+    <h3>Confirmar presente 🎁</h3>
+    <p id="giftModalName" style="margin-bottom:16px;color:var(--muted);font-weight:700;"></p>
+    <input type="text" id="giftPersonName" placeholder="Seu nome completo" style="margin-bottom:12px;">
+    <div class="modal-buttons">
+      <button class="btn-cancel" onclick="closeGiftModal()">Cancelar</button>
+      <button class="btn" onclick="confirmGift()" style="margin:0;">Confirmar</button>
+    </div>
+  </div>
+</div>
+
 <footer>Feito com carinho para o Open House do Renan e Jean 🏠✨</footer>
 </div>
 
@@ -155,20 +177,22 @@ const GIFTS = [
 ];
 
 const BRL = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
-const selectedGifts = new Set();
+const selectedGifts = JSON.parse(localStorage.getItem('selectedGifts') || '{}');
+let currentGiftIdx = null;
 
 function renderGifts() {
   const giftsEl = document.getElementById('gifts');
   giftsEl.innerHTML = GIFTS.map((g, idx) => {
-    const isSelected = selectedGifts.has(idx);
+    const isSelected = selectedGifts[idx];
     return `
       <div class="gift ${isSelected ? 'selected' : ''}" data-id="${idx}">
         <div class="info">
           <div class="name">${g.name}</div>
           <div class="price">${BRL(g.price)}</div>
+          ${isSelected ? `<small style="color:var(--muted);margin-top:4px;">✓ ${isSelected}</small>` : ''}
         </div>
         <div class="gift-actions">
-          <button class="btn-choose" onclick="toggleGift(${idx});">${isSelected ? '✓ Escolhido' : 'Vou dar esse'}</button>
+          <button class="btn-choose" onclick="openGiftModal(${idx});">${isSelected ? '✓ Escolhido' : 'Vou dar esse'}</button>
           <a class="btn-link" href="${g.link}" target="_blank">Ver 🔗</a>
         </div>
       </div>
@@ -176,12 +200,43 @@ function renderGifts() {
   }).join('');
 }
 
-function toggleGift(idx) {
-  if (selectedGifts.has(idx)) {
-    selectedGifts.delete(idx);
-  } else {
-    selectedGifts.add(idx);
+function openGiftModal(idx) {
+  if (selectedGifts[idx]) {
+    delete selectedGifts[idx];
+    localStorage.setItem('selectedGifts', JSON.stringify(selectedGifts));
+    renderGifts();
+    return;
   }
+  currentGiftIdx = idx;
+  document.getElementById('giftModalName').textContent = GIFTS[idx].name;
+  document.getElementById('giftPersonName').value = '';
+  document.getElementById('giftModal').classList.add('show');
+  document.getElementById('giftPersonName').focus();
+}
+
+function closeGiftModal() {
+  document.getElementById('giftModal').classList.remove('show');
+  currentGiftIdx = null;
+}
+
+function confirmGift() {
+  const name = document.getElementById('giftPersonName').value.trim();
+  if (!name) {
+    alert('Por favor, digite seu nome');
+    return;
+  }
+
+  const giftName = GIFTS[currentGiftIdx].name;
+  const giftPrice = BRL(GIFTS[currentGiftIdx].price);
+
+  selectedGifts[currentGiftIdx] = name;
+  localStorage.setItem('selectedGifts', JSON.stringify(selectedGifts));
+
+  const mensagem = `Oi Renan!\n\nVou dar de presente: ${giftName}\n(${giftPrice})\n\nNome de quem vai dar: ${name}`;
+  const whatsappLink = `https://wa.me/5513988042485?text=${encodeURIComponent(mensagem)}`;
+
+  window.open(whatsappLink, '_blank');
+  closeGiftModal();
   renderGifts();
 }
 
@@ -202,8 +257,16 @@ form.addEventListener('submit', function(e) {
 
   successMessage.classList.add('show');
 
-  setTimeout(() => {
+  // Funciona melhor em mobile e desktop
+  if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+    // Mobile: abre o app do WhatsApp
+    window.location.href = whatsappLink;
+  } else {
+    // Desktop: abre em nova aba
     window.open(whatsappLink, '_blank');
+  }
+
+  setTimeout(() => {
     form.reset();
     setTimeout(() => {
       successMessage.classList.remove('show');
