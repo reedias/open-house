@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Open House do Renan e Jean</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --purple:#7C3AED; --purple-dark:#4C1D95; --purple-light:#EDE4FD;
+  --cream:#F7F2E7; --ink:#1A1A1A; --card:#FFFFFF; --muted:#6B6B6B; --border:#E7DFCC;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px);}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --purple:#A78BFA; --purple-dark:#C4B5FD; --purple-light:#2E2347;
+    --cream:#17141C; --ink:#F2EEF9; --card:#221C2E; --muted:#B5ADC4; --border:#3A3148;
+  }
+}
+:root[data-theme="dark"]{
+  --purple:#A78BFA; --purple-dark:#C4B5FD; --purple-light:#2E2347;
+  --cream:#17141C; --ink:#F2EEF9; --card:#221C2E; --muted:#B5ADC4; --border:#3A3148;
+}
+*{box-sizing:border-box;}
+body{margin:0;background:var(--cream);color:var(--ink);font-family:"Nunito",system-ui,sans-serif;line-height:1.5;}
+.wrap{max-width:680px;margin:0 auto;padding:0 20px 60px;}
+header{padding:40px 20px 28px;text-align:center;}
+h1{font-family:"Permanent Marker",cursive;color:var(--purple);font-size:clamp(2.2rem,8vw,3.2rem);margin:0 0 4px;line-height:1;}
+h1 span{display:block;color:var(--ink);font-size:0.4em;font-family:"Nunito",sans-serif;font-weight:800;letter-spacing:1px;margin-top:10px;}
+.sub{color:var(--muted);font-weight:700;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:18px;padding:22px;margin-top:18px;}
+.details{display:flex;flex-direction:column;gap:10px;}
+.details div{display:flex;gap:10px;align-items:flex-start;font-weight:700;}
+.details .emoji{font-size:1.2rem;}
+.details small{display:block;color:var(--muted);font-weight:600;}
+.strip{background:var(--purple-light);border-radius:14px;padding:14px 16px;margin-top:12px;font-weight:700;display:flex;gap:10px;align-items:center;}
+h2{font-family:"Permanent Marker",cursive;color:var(--purple-dark);font-size:1.5rem;margin:36px 0 4px;}
+.hint{color:var(--muted);font-size:0.9rem;margin:0 0 14px;}
+input,textarea{width:100%;padding:12px 14px;border:1px solid var(--border);border-radius:10px;font-family:inherit;font-size:1rem;background:var(--cream);color:var(--ink);margin-bottom:10px;}
+label{font-weight:700;font-size:0.9rem;display:block;margin-bottom:4px;}
+button,.btn{background:var(--purple);color:#fff;border:none;border-radius:10px;padding:13px 18px;font-weight:800;font-size:1rem;cursor:pointer;width:100%;text-align:center;display:block;text-decoration:none;}
+.btn:hover{opacity:0.9;transform:translateY(-2px);}
+.gift{display:flex;justify-content:space-between;align-items:center;gap:12px;border-bottom:1px solid var(--border);padding:14px 0;flex-wrap:wrap;position:relative;}
+.gift:last-child{border-bottom:none;}
+.gift .info{flex:1;}
+.gift .name{font-weight:700;font-size:0.95rem;margin-bottom:4px;}
+.gift .price{color:var(--muted);font-weight:700;font-size:0.9rem;}
+.gift-actions{display:flex;gap:8px;flex-wrap:wrap;}
+.gift .btn-choose{width:auto;background:var(--purple);color:#fff;border:none;padding:9px 14px;font-size:0.85rem;border-radius:8px;font-weight:700;cursor:pointer;}
+.gift .btn-choose:hover{opacity:0.9;}
+.gift .btn-link{width:auto;background:transparent;color:var(--purple);border:2px solid var(--purple);padding:7px 12px;font-size:0.75rem;font-weight:700;}
+.gift .btn-link:hover{background:var(--purple);color:#fff;}
+.gift.selected{background:var(--purple-light);border-radius:10px;padding:14px;margin:0 -6px;}
+.gift.selected .name::before{content:'✓ ';color:var(--purple);font-weight:900;}
+.pix{margin-top:14px;font-weight:700;color:var(--purple-dark);}
+.pix-link{display:inline-block;padding:8px 12px;background:var(--purple-light);border-radius:8px;margin-top:8px;color:var(--purple-dark);text-decoration:none;font-weight:700;}
+.pix-link:hover{background:var(--purple);color:#fff;}
+.success-message{display:none;background:#10b981;color:#fff;padding:14px 16px;border-radius:10px;margin-bottom:14px;font-weight:700;}
+.success-message.show{display:block;animation:slideDown 0.4s ease;}
+@keyframes slideDown{from{opacity:0;transform:translateY(-10px);}to{opacity:1;transform:translateY(0);}}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+@media(max-width:600px){.form-row{grid-template-columns:1fr;}}
+footer{text-align:center;color:var(--muted);font-size:0.85rem;margin-top:30px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>Finalmente veio aí! <span>OPEN HOUSE DO RENAN E DO JEAN</span></h1>
+  <div class="sub">Confirme sua presença e escolha um presente 🎁</div>
+</header>
+
+<section class="card">
+  <div class="details">
+    <div><span class="emoji">📅</span><div>24/10 (sábado)</div></div>
+    <div><span class="emoji">🕓</span><div>16h</div></div>
+    <div><span class="emoji">📍</span><div>Rua do Bosque, 980<br><small>Salão de Festas — Torre Safira</small></div></div>
+  </div>
+  <div class="strip">🍽️ A comida é por conta do Renan e do Jean!</div>
+  <div class="strip">🍹 Se for beber álcool, traga o que você gosta de beber.</div>
+</section>
+
+<section class="card">
+  <h2 style="margin-top:0">Confirmar presença</h2>
+  <p class="hint">Preenche aqui embaixo e confirma sua presença</p>
+  <div class="success-message" id="successMessage">✅ Presença confirmada!</div>
+  <form id="presenceForm">
+    <div class="form-row">
+      <div>
+        <label for="nome">Seu nome</label>
+        <input id="nome" placeholder="Ex: Ana Souza" required>
+      </div>
+      <div>
+        <label for="telefone">Seu telefone</label>
+        <input id="telefone" placeholder="(11) 99999-9999" type="tel" required>
+      </div>
+    </div>
+    <button type="submit" class="btn">Confirmar Presença via WhatsApp</button>
+  </form>
+</section>
+
+<!-- PIX SECTION -->
+<section class="card">
+  <h2>Renan</h2>
+  <p class="hint">Escolha um presente da lista abaixo ou contribua com PIX</p>
+  <div class="pix">💜 PIX: <strong>renandrodrigues@gmail.com</strong></div>
+
+  <h2 style="margin-top:28px;">Jean</h2>
+  <p class="hint">Jean prefere receber em PIX</p>
+  <div class="pix">💜 PIX: <strong>11953291865</strong></div>
+</section>
+
+<!-- LISTA RENAN -->
+<section class="card">
+  <h2>Lista de Presentes</h2>
+  <p class="hint">Clique em "Vou dar esse" para escolher um presente. Pode desmarcar depois se mudar de ideia.</p>
+  <div id="gifts"></div>
+</section>
+
+<footer>Feito com carinho para o Open House do Renan e Jean 🏠✨</footer>
+</div>
+
+<script>
+const GIFTS = [
+  {name:'Ninja Sorveteira Creami (7 opções)',price:1600,link:'https://www.amazon.com.br/s?k=Ninja+Sorveteira+Creami'},
+  {name:'Kit 20 Cabides de Madeira Preto',price:160,link:'https://www.amazon.com.br/s?k=Cabide+Madeira+Premium'},
+  {name:'Caixa Organizadora c/ Tampa 10,5L Azul Glacial',price:60,link:'https://www.amazon.com.br/s?k=Caixa+Organizadora+10,5L+Azul'},
+  {name:'Caixa Organizadora c/ Tampa 10,5L Azul Glacial',price:60,link:'https://www.amazon.com.br/s?k=Caixa+Organizadora+10,5L+Azul'},
+  {name:'Escada de Alumínio 3 Degraus',price:130,link:'https://www.amazon.com.br/s?k=Escada+Aluminio+3+Degraus'},
+  {name:'Jogo de Panelas Tramontina Mônaco Preto (5 peças)',price:730,link:'https://www.amazon.com.br/s?k=Jogo+Panelas+Tramontina'},
+  {name:'Kit Toalha Banho e Rosto Buddemeyer (algodão egípcio)',price:220,link:'https://www.amazon.com.br/s?k=Toalha+Buddemeyer'},
+  {name:'Toalha Banhão Buddemeyer Canelada',price:115,link:'https://www.amazon.com.br/s?k=Toalha+Buddemeyer+Canelada'},
+  {name:'Toalha Banhão Buddemeyer Canelada',price:115,link:'https://www.amazon.com.br/s?k=Toalha+Buddemeyer+Canelada'},
+  {name:'Faqueiro Home Style Madri 30 peças',price:300,link:'https://www.amazon.com.br/s?k=Faqueiro+Home+Style'},
+  {name:'Kit Aromatizador de Ambientes + Difusor',price:166,link:'https://www.amazon.com.br/s?k=Aromatizador+Difusor'},
+  {name:'Kit 9 Potes de Vidro c/ Tampa de Bambu',price:85,link:'https://www.amazon.com.br/s?k=Potes+Vidro+Tampa+Bambu'},
+  {name:'Petisqueira Home Style Banana 18cm',price:60,link:'https://www.amazon.com.br/s?k=Petisqueira+Home+Style'},
+  {name:'Conjunto 6 Taças Bordeaux Bohemia',price:95,link:'https://www.amazon.com.br/s?k=Tacas+Bordeaux+Bohemia'},
+  {name:'Echo Show 5 (geração mais recente)',price:849,link:'https://www.amazon.com.br/s?k=Echo+Show+5'},
+  {name:'JBL Go 5 — Caixa de Som Bluetooth',price:275,link:'https://www.amazon.com.br/s?k=JBL+Go+5'},
+  {name:'Quebra-cabeça 1000 peças "Entre o Sol e a Lua"',price:190,link:'https://www.amazon.com.br/s?k=Quebra+Cabeca+1000'},
+  {name:'Quadro Onça Pintada — Elizeu Galvão (grande)',price:535,link:'https://www.amazon.com.br/s?k=Elizeu+Galvao+Onca'},
+  {name:'Quadro Paisagem Noite e Dia — Elizeu Galvão',price:262,link:'https://www.amazon.com.br/s?k=Elizeu+Galvao+Paisagem'},
+  {name:'Quadro Cachorro Caramelo — Elizeu Galvão',price:262,link:'https://www.amazon.com.br/s?k=Elizeu+Galvao+Cachorro'},
+  {name:'Quadro Onça Pintada — Elizeu Galvão (menor)',price:397,link:'https://www.amazon.com.br/s?k=Elizeu+Galvao'},
+  {name:'Quadro Santo Antônio — Elizeu Galvão',price:548,link:'https://www.amazon.com.br/s?k=Elizeu+Galvao+Santo'},
+  {name:'Puff Set Round Terracota (Tok&Stok)',price:199,link:'https://www.tokstok.com.br/s?k=Puff+Set+Round'},
+  {name:'Puff Set Round Terracota (Tok&Stok)',price:199,link:'https://www.tokstok.com.br/s?k=Puff+Set+Round'},
+  {name:'Aparador de Livros Sete Ervas Axé Nozes',price:43,link:'https://www.tokstok.com.br/s?k=Aparador+Livros'},
+  {name:'Banco Onça de Madeira',price:197,link:'https://www.amazon.com.br/s?k=Banco+Onca+Madeira'},
+];
+
+const BRL = v => v.toLocaleString('pt-BR',{style:'currency',currency:'BRL'});
+const selectedGifts = new Set();
+
+function renderGifts() {
+  const giftsEl = document.getElementById('gifts');
+  giftsEl.innerHTML = GIFTS.map((g, idx) => {
+    const isSelected = selectedGifts.has(idx);
+    return `
+      <div class="gift ${isSelected ? 'selected' : ''}" data-id="${idx}">
+        <div class="info">
+          <div class="name">${g.name}</div>
+          <div class="price">${BRL(g.price)}</div>
+        </div>
+        <div class="gift-actions">
+          <button class="btn-choose" onclick="toggleGift(${idx});">${isSelected ? '✓ Escolhido' : 'Vou dar esse'}</button>
+          <a class="btn-link" href="${g.link}" target="_blank">Ver 🔗</a>
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function toggleGift(idx) {
+  if (selectedGifts.has(idx)) {
+    selectedGifts.delete(idx);
+  } else {
+    selectedGifts.add(idx);
+  }
+  renderGifts();
+}
+
+// Formulário de presença
+const form = document.getElementById('presenceForm');
+const successMessage = document.getElementById('successMessage');
+
+form.addEventListener('submit', function(e) {
+  e.preventDefault();
+
+  const nome = document.getElementById('nome').value.trim();
+  const telefone = document.getElementById('telefone').value.trim();
+
+  if (!nome || !telefone) return;
+
+  const mensagem = `Olá! Vou confirmar presença no Open House do Renan e Jean!\n\nNome: ${nome}\nTelefone: ${telefone}`;
+  const whatsappLink = `https://wa.me/5513988042485?text=${encodeURIComponent(mensagem)}`;
+
+  successMessage.classList.add('show');
+
+  setTimeout(() => {
+    window.open(whatsappLink, '_blank');
+    form.reset();
+    setTimeout(() => {
+      successMessage.classList.remove('show');
+    }, 3000);
+  }, 1000);
+});
+
+// Formata telefone
+document.getElementById('telefone').addEventListener('input', function(e) {
+  let value = e.target.value.replace(/\D/g, '');
+  if (value.length > 0) {
+    value = '(' + value.substring(0, 2) + ') ' + value.substring(2, 7) + '-' + value.substring(7, 11);
+  }
+  e.target.value = value;
+});
+
+renderGifts();
+</script>
+</body>
+</html>
